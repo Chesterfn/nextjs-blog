@@ -3,6 +3,7 @@ import Layout from '../../components/layout';
 import { getAllPostIds, getPostData} from '../../lib/posts';
 import utilStyles from '../../styles/utils.module.css'
 import Date from '../../components/date';
+import { useRouter } from 'next/router';
 interface IdProps {
     postData: {
         id: string;
@@ -39,6 +40,10 @@ export async function getStaticProps({params}:IdParams) {
 }
 
 export default function Post( {postData}:IdProps) {
+  const router = useRouter()
+
+  // If the page is not yet generated, this will be displayed
+  // initially until getStaticProps() finishes running
     return (
         <Layout>
           <Head>
@@ -53,6 +58,7 @@ export default function Post( {postData}:IdProps) {
           </div>
           <br />
           <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+          {router.isFallback && <div style={{color:'red'}}>Loading...</div>}
         </Layout>
       )
 }
